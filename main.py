@@ -13,9 +13,9 @@ SERPER_URL = "https://google.serper.dev/search"
 
 #return latest information using the following urls 
 docs_url = {
-    "langchain" : "https://python.langchain.com/docs/",
-    "llama-index": "https://docs.llamaindex.ai/en/stable/",
-    "openai": "https://platform.openai.com/docs"
+    "langchain": "python.langchain.com/docs",
+    "llama-index": "docs.llamaindex.ai/en/stable",
+    "openai": "platform.openai.com/docs",
 }
 
 #we use SERPER for serach web for google serach API
@@ -31,7 +31,7 @@ async def search_web(query: str) -> dict | None:
     #access SERPER API Key
     headers = {
         "X-API-KEY": os.getenv("SERPERAPI_KEY"),
-        "Content-type": "application/json"
+        "Content-Type": "application/json",
     }
 
     async with httpx.AsyncClient() as client:
@@ -43,7 +43,7 @@ async def search_web(query: str) -> dict | None:
             response.raise_for_status()
             return response.json()
         except httpx.TimeoutException:
-            return {'organic': []}
+            return {"organic": []}
 
 
 async def fetch_url(url: str):
@@ -80,10 +80,10 @@ async def get_docs(query: str, library: str):
     if library not in docs_url:
         return ValueError(f"Library {library} not support by this tool.")
     
-    query = f'site:{docs_url[library]} {query}' #format for seraching using SERPER
+    query = f"site:{docs_url[library]} {query}" #format for seraching using SERPER
     result = await search_web(query)
 
-    if len(result['organic']) == 0:
+    if len(result["organic"]) == 0:
         return "No result found"
     
     #for every result i have got we can fetch in oragnic part of the response (organic is a section in the JSON returned by SERPER)
